@@ -1,0 +1,52 @@
+# Reduccion
+# Ejemplo
+# SAT a 3SAT
+
+# Paso 1
+# Se debe  transformar cada clausula de SAT a 3SAT dependiendo de sus literales
+
+# Si k = 1 => 2 variables, 4 clausulas
+#print(created_clausules_SAT([1, 2]))
+
+# Si k = 2 => 1 variable, 2 clausulas
+#print(created_clausules_SAT([1]))
+
+# Si k = 3 => Ya esta en 3SAT
+#print(created_clausules_SAT([]))
+
+# Si k > 3 => k - x variables (k - x) + 1 clausulas
+
+# Si k = 4 => 1 variable, 2 clausulas
+#print(created_clausules_SAT([3]))
+# (z1 , z2, v3) (-v3, z3, z4)
+
+# Si k = 5 => 2 variables, 3 clausulas
+#print(create_chaining([1, 2, 3, 4]))
+
+
+# Ejemplo
+# Reducir de SAT a 3 SAT
+# Input ([7, 3], [(1, 2, -4), (2, -3), (1, -2, 3, 5, 6, -7)])
+
+for index, value in enumerate(literals):
+        if index == 0:
+            first_clause.append(value)
+
+        if index > 0 and index < len(literals) - 1:
+            for middle_clause in middle_clauses:
+                while(len(middle_clause) < to_SAT):
+                    middle_clause.append(value)
+
+        
+        if index == len(literals) - 1:
+            last_clause.append(value)
+
+for index, value in enumerate(clause):
+        if index < elements:
+            first_clause.append(value)
+
+        if not index < elements and not index >= len(clause) - elements:
+            middle_clauses.append([value])
+
+        if index >= len(clause) - elements:
+            last_clause.append(value)
