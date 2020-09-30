@@ -1,0 +1,7 @@
+c Ejecicio 2
+c Clase 2
+c Complejidad y optimizacion
+p cnf 7 3
+1 2 -4 0
+2 -3 0
+1 -2 3 5 6, -7 0
