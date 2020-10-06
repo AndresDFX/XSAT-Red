@@ -1,5 +1,5 @@
 
-from os import listdir
+from os import listdir, mkdir
 from os.path import isfile, join
 from pysat.solvers import Glucose3
 from pysat.formula import CNF
@@ -8,13 +8,17 @@ from pysat.solvers import Lingeling
 
 import re
 import itertools
+import shutil
 
+PATH_SAT = "../InstanciasTriviales/"
+#PATH_SAT = "../InstanciasSAT/"
+PATH_XSAT = "../X-SAT/"
 
 #------------------------------------------------#
 # AUX FUNCTIONS FOR TRANSFORM SAT TO X SAT
 #------------------------------------------------#
 
-def create_clauses_SAT(clause, list_vars, to_SAT):
+def create_clauses_SAT(clause, list_vars, to_sat):
     """
     Input:
       clause    : SAT instance clause
@@ -25,25 +29,25 @@ def create_clauses_SAT(clause, list_vars, to_SAT):
       Returns the transformed clauses depending on the case k < x, k > x or k = x
     """
     k = len(clause)
-    x = to_SAT
+    x = to_sat
     
     if k < x:
        return create_clauses_k_less_x(clause, list_vars)
     
     if k > x:
-        return create_clauses_k_greater_x(clause, list_vars, to_SAT)
+        return create_clauses_k_greater_x(clause, list_vars, to_sat)
 
     return clause
 
 
-def create_clauses_k_greater_x(clause, list_vars, to_SAT):
+def create_clauses_k_greater_x(clause, list_vars, to_sat):
     """
     Returns the transformed clause starting from the combinatorial 
     of the variables for the specific case k > x
     """
     iterations = len(list_vars) + 1
     # Numero de elementos para la primera y ultima clausula
-    elements = to_SAT - 1
+    elements = to_sat - 1
     
     result = list()
 
@@ -65,7 +69,7 @@ def create_clauses_k_greater_x(clause, list_vars, to_SAT):
 
         else: 
             aux = clause[index+1:elements+index]
-            while(len(aux) < to_SAT):
+            while(len(aux) < to_sat):
                 aux.append(variables[0])
                 variables.pop(0)
             
@@ -125,7 +129,7 @@ def check_list_flatten(list):
 
 
 #------------------------------------------------#
-# AUX FUNCTIONS FOR READING FILES CNF 
+# AUX FUNCTIONS FOR READING AND WRITING FILES CNF 
 #------------------------------------------------#
 
 
@@ -142,13 +146,13 @@ def read_file_dimacs(filename):
         lines = file.readlines()
         for index, line in enumerate(lines):
             if line.startswith("p"):
-                sat = info_format(line), clause_format(lines[index + 1:])
+                sat = info_format(line), read_clause_format(lines[index + 1:])
                 break
 
     return sat
 
 
-def clause_format(clauses):
+def read_clause_format(clauses):
     """
     Input:
         list of string with clausules SAT
@@ -175,6 +179,30 @@ def info_format(info):
     return [int(num) for num in value]
 
 
+def write_csv_file(filename, xsat, to_xsat):
+    """
+    Input:
+      filename  - name of cnf SAT file
+    Output:
+      Returns the new instance of SAT 
+    """
+    info = xsat[0]
+    clauses = xsat[1]
+    with open(filename, 'w', newline='') as file:
+        file.write("c {}-SAT \n".format(to_xsat))
+        file.write("p cnf {} {} \n".format(info[0], info[1]))
+        for clause in clauses:
+            file.write(write_clause_format(clause))
+            file.write("\n")
+
+
+def write_clause_format(clause):
+    str_clause = ""
+    for value in clause:
+        str_clause = "{} {}".format(str_clause, str(value))
+    return "{} 0".format(str_clause.strip())
+
+
 #------------------------------------------------#
 # SOLVER FUNCTION
 #------------------------------------------------#
@@ -193,52 +221,71 @@ def solver_glucose(sat):
 #------------------------------------------------#
 
 
-def reductor_SAT(value, to_SAT):
+def reductor_SAT(value, to_sat):
     """
     Input:
       value  - SAT instance with format ([nvar, nclausules], [clause1, clause2, clausen])
     Output:
-      Returns the transformed instance SAT to XSAT
+      Returns the transformed instance SAT to XSAT in format dimacs
     """
-    input_SAT = value
-    num_vars = input_SAT[0][0]
-    SAT = input_SAT[1]
+    input_sat = value
+    num_vars = input_sat[0][0]
+    sat = input_sat[1]
     list_vars = []
-    new_SAT = []
+    new_sat = []
+    total_clauses = 0
 
     var = num_vars
-    for clause in SAT:
+    # Info total vars in instances SAT
+    total_vars = num_vars
 
-        num_new_vars = abs(len(clause) - to_SAT)
-    
+    for clause in sat:
+
+        num_new_vars = abs(len(clause) - to_sat)
+        total_vars = total_vars + num_new_vars
+
         # Crea las nuevas variables dependiendo de los K literales de cada clausula
         while num_new_vars > 0:
             var = var + 1
             list_vars.append(var)
             num_new_vars = num_new_vars - 1
 
-        clause_transform = create_clauses_SAT(clause, list_vars, to_SAT)
+        clause_transform = create_clauses_SAT(clause, list_vars, to_sat)
+        # total clauses instances SAT
+        total_clauses = total_clauses + len(clause_transform)
 
         if check_list_flatten(clause_transform):
-            new_SAT.append(clause_transform)
+            new_sat.append(clause_transform)
         else:
             for element in clause_transform:
-                new_SAT.append(element)
+                new_sat.append(element)
 
         # se inicializa nuevamente para que en la proxima clausula
         # se añadan las nuevas variables que corresponden
         list_vars = []
-    
+
     # Reduccion del problema SAT
-    return new_SAT
+    return ([total_vars, total_clauses], new_sat)
 
 
 
-def main():
-    #instancias_SAT = [f for f in listdir(PATH_SAT) if isfile(join(PATH_SAT, f))]
-    #print(instancias_SAT)
-    pass
+def read_and_reduct_sat(to_xsat):
+    """
+    Read all SAT instances and generate corresponding XSAT files 
+    """
+    # Delete folder XSAT
+    shutil.rmtree(PATH_XSAT, ignore_errors=True)
+    # Create folder XSAT
+    mkdir(PATH_XSAT)
+    
+    files = [f for f in listdir(PATH_SAT) if isfile(join(PATH_SAT, f))]
+
+    # Read all instances SAT
+    for file in files:
+        instances = read_file_dimacs("{}{}".format(PATH_SAT, file))
+        xsat = reductor_SAT(instances, to_xsat)
+        filename = "{}{}".format(PATH_XSAT, file)
+        write_csv_file(filename, xsat, to_xsat)
     
 
-
-main()
+read_and_reduct_sat(4)
