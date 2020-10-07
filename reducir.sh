@@ -1,4 +1,4 @@
-!/bin/bash
+#!/usr/bin/env bash
 
 #Verificar el argumento que se obtiene el argumento del flag -x o
 while test $# -gt 0; do
@@ -16,16 +16,20 @@ while test $# -gt 0; do
 done
 
 #Verificar la instalacion de python3.6 y ejecutar el Reductor
-lines=$(which python3.6|wc -l)
-if [ $lines -eq 1 ];
-then
-    cd Reductor/
-    python3.6 main.py $first_argument
-else
-    apt-get install software-properties-common -y
-    add-apt-repository ppa:jonathonf/python-3.6
-    apt-get update -y
-    apt-get install python3.6 -y
-    cd Reductor/
-    python3.6 main.py $first_argument
-fi
+#lines=$(which python3.6|wc -l)
+#if [ $lines -eq 1 ];
+#then
+    #cd Reductor/
+    #python3.6 main.py $first_argument
+#else
+    #apt-get install software-properties-common -y
+    #add-apt-repository ppa:jonathonf/python-3.6
+    #apt-get update -y
+    #apt-get install python3.6 -y
+    #cd Reductor/
+    #python -m pip install pysat
+    #python3.6 main.py $first_argument
+#fi
+
+cd Reductor/
+python reductor.py $first_argument
