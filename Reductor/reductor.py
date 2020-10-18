@@ -5,7 +5,6 @@ from pysat.solvers import Glucose3
 from pysat.formula import CNF
 from pysat.solvers import Lingeling
 
-
 import re
 import itertools
 import shutil
@@ -23,7 +22,7 @@ def create_clauses_SAT(clause, list_vars, to_sat):
     """
     Input:
       clause    : SAT instance clause
-      list_vars : list of the new variables that must be added 
+      list_vars : list of the new variables that must be added
                   depending on the case k < x or k > x
       to_SAT    : Variable that indicates the reduction of SAT
     Output:
@@ -31,10 +30,10 @@ def create_clauses_SAT(clause, list_vars, to_sat):
     """
     k = len(clause)
     x = to_sat
-    
+
     if k < x:
        return create_clauses_k_less_x(clause, list_vars)
-    
+
     if k > x:
         return create_clauses_k_greater_x(clause, list_vars, to_sat)
 
@@ -43,17 +42,17 @@ def create_clauses_SAT(clause, list_vars, to_sat):
 
 def create_clauses_k_greater_x(clause, list_vars, to_sat):
     """
-    Returns the transformed clause starting from the combinatorial 
+    Returns the transformed clause starting from the combinatorial
     of the variables for the specific case k > x
     """
     iterations = len(list_vars) + 1
     # Numero de elementos para la primera y ultima clausula
     elements = to_sat - 1
-    
+
     result = list()
 
-    # Se crean la combinatoria de variables positivas y negativas
-    # Ejemplo [1, -1, 2, -2, 3, -3]
+    # Se crean las variables positivas y negativas
+    # Ejemplo [x1, -x1, x2, -x2]
     variables = create_vars_k_greater_x(list_vars)
 
     for index in range(iterations):
@@ -69,27 +68,32 @@ def create_clauses_k_greater_x(clause, list_vars, to_sat):
             variables.pop(0)
             result.append(last_clause)
 
-        else: 
+        else:
             aux = clause[index+1:elements+index]
             while(len(aux) < to_sat):
                 aux.append(variables[0])
                 variables.pop(0)
-            
+
             result.append(aux)
 
+    # Ejemplo
+    # [1, 2, 3, x1] [-x1, 3, 4, x2] [-x2, 4, 5, 6]
     return result
 
 
 def create_clauses_k_less_x(clause, list_vars):
     """
-    Returns the transformed clause starting from the combinatorial 
+    Returns the transformed clause starting from the combinatorial
     of the variables for the specific case k < x
     """
     result = []
 
     for value in created_literals_k_less_x(list_vars):
         result.append([*clause, *value])
-
+    print(result)
+    # Ejemplo, tenemos una clausula con tres literales 1, 2, 3
+    # las nuevas clausulas seria
+    # [[1, 2, 3, x1, x2], [1, 2, 3, x1, -x2], [1, 2, 3, -x1, x2], [1, 2, 3, -x1, -x2]]
     return result
 
 
@@ -107,7 +111,7 @@ def create_vars_k_greater_x(list_vars):
     for vars in list_vars:
         result.append(vars * negative_and_positive_vars(False))
         result.append(vars * negative_and_positive_vars(True))
-    
+
     return result
 
 
@@ -123,6 +127,8 @@ def created_literals_k_less_x(list_vars):
         for j in range(len(bol[i])):
             bol[i][j] = list_vars[j] * negative_and_positive_vars(bol[i][j])
 
+    # Ejemplo si tenemos dos variables x1 y x2
+    # [[x1, x2], [x1, -x2], [-x1, x2], [-x1, -x2]]
     return bol
 
 
@@ -131,7 +137,7 @@ def check_list_flatten(list):
 
 
 #------------------------------------------------#
-# AUX FUNCTIONS FOR READING AND WRITING FILES CNF 
+# AUX FUNCTIONS FOR READING AND WRITING FILES CNF
 #------------------------------------------------#
 
 
@@ -186,7 +192,7 @@ def write_csv_file(filename, xsat, to_xsat):
     Input:
       filename  - name of cnf SAT file
     Output:
-      Returns the new instance of SAT 
+      Returns the new instance of SAT
     """
     info = xsat[0]
     clauses = xsat[1]
@@ -215,11 +221,11 @@ def solver_glucose(sat):
 
     for clause in sat:
         g.add_clause(clause)
-    
+
     return g.solve()
 
 #------------------------------------------------#
-# MAIN FUNCTION FOR TRANSFORM SAT TO XSAT 
+# MAIN FUNCTION FOR TRANSFORM SAT TO XSAT
 #------------------------------------------------#
 
 
@@ -246,12 +252,15 @@ def reductor_SAT(value, to_sat):
         num_new_vars = abs(len(clause) - to_sat)
         total_vars = total_vars + num_new_vars
 
-        # Crea las nuevas variables dependiendo de los K literales de cada clausula
+        # Creamos un listado de nuevas variables dependiendo de los K literales de cada clausula
+        # Ejemplo
+        # [8, 9]
         while num_new_vars > 0:
             var = var + 1
             list_vars.append(var)
             num_new_vars = num_new_vars - 1
 
+        # Se crean las clausulas transformadas
         clause_transform = create_clauses_SAT(clause, list_vars, to_sat)
         # total clauses instances SAT
         total_clauses = total_clauses + len(clause_transform)
@@ -273,14 +282,16 @@ def reductor_SAT(value, to_sat):
 
 def read_and_reduct_sat(to_xsat):
     """
-    Read all SAT instances and generate corresponding XSAT files 
+    Read all SAT instances and generate corresponding XSAT files
     """
     # Delete folder XSAT
     shutil.rmtree(PATH_XSAT, ignore_errors=True)
     # Create folder XSAT
     mkdir(PATH_XSAT)
 
-    print("> Realizando la reduccion")
+
+    print("> Making the reductions")
+
 
     files = [f for f in listdir(PATH_SAT) if isfile(join(PATH_SAT, f))]
 
@@ -292,11 +303,8 @@ def read_and_reduct_sat(to_xsat):
         write_csv_file(filename, xsat, to_xsat)
 
 
-    print("> Terminado!")
+# Main function
+if __name__ == "__main__":
+    read_and_reduct_sat(int(sys.argv[1]))
+    print("> All reductions were made")
 
-def main():
-    if __name__== "__main__" :
-        to_xsat = int(sys.argv[1])
-        read_and_reduct_sat(to_xsat)
-
-main()

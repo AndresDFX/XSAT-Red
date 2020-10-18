@@ -53,11 +53,11 @@ def test_check_all_instances(all_sat, all_xsat):
 def main():
     # Instancias SAT
     # Test para verificacion general del reductor
-    test_check_all_instances("../InstanciasSAT/", "../X-SAT/")
+    #test_check_all_instances("../InstanciasSAT/", "../X-SAT/")
     # Instancias Triviales
 
     # Test 1 SAT to 5-SAT
-    #test_show_especific_xsat("02.cnf", 5)
+    test_show_especific_xsat("02.cnf", 5)
 
     # Test 2 SAT to 5-SAT
 

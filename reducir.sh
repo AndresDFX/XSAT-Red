@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
 
 #Verificar el argumento que se obtiene el argumento del flag -x o
 while test $# -gt 0; do
@@ -26,7 +27,7 @@ done
     #python3.6 main.py $first_argument
 #fi
 
-echo "> Transformar a ${x_sat}-SAT"
+echo "> Transform to ${x_sat}-SAT"
 
 cd Reductor/
 python reductor.py $x_sat
