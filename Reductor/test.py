@@ -1,9 +1,11 @@
-from os import mkdir
+from os import listdir, mkdir
+from os.path import isfile, join, dirname, realpath
+
 import reductor
 import shutil
 
-#PATH_SATH = "../InstanciasTriviales/"
-PATH_SATH = "../InstanciasSAT/"
+PATH_SATH = "../InstanciasTriviales/"
+#PATH_SATH = "../InstanciasSAT/"
 
 def test_check_multiple_xsat(file, number):
     filename = "{}{}".format(PATH_SATH, file)
@@ -26,6 +28,7 @@ def test_show_especific_xsat(file, to_xsat):
     xsat = reductor.reductor_SAT(sat, to_xsat)
     filename = "{}/{}-SAT".format(path, to_xsat)
     reductor.write_csv_file(filename, xsat, to_xsat)
+    print("Ok! ver archivo")
 
 
 def test_check_especific_xsat(file, to_xsat):
@@ -36,9 +39,21 @@ def test_check_especific_xsat(file, to_xsat):
     print("Solver {}SAT".format(to_xsat), reductor.solver_glucose(xsat[1]))
     print()
 
+def test_check_all_instances(all_sat, all_xsat):
+    files_sat = [f for f in listdir(all_sat) if isfile(join(all_sat, f))]
+    files_xsat = [f for f in listdir(all_sat) if isfile(join(all_sat, f))]
+
+    for file_sat, file_xsat in zip(files_sat, files_xsat):
+        instances_sat = reductor.read_file_dimacs("{}{}".format(all_sat, file_sat))
+        instances_xsat = reductor.read_file_dimacs("{}{}".format(all_xsat, file_xsat))
+        print("Solver SAT:", reductor.solver_glucose(instances_sat[1]), "- Solver X-SAT:", reductor.solver_glucose(instances_xsat[1]))
+
 
 
 def main():
+    # Instancias SAT
+    # Test para verificacion general del reductor
+    test_check_all_instances("../InstanciasSAT/", "../X-SAT/")
     # Instancias Triviales
 
     # Test 1 SAT to 5-SAT

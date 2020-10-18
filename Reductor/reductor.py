@@ -1,6 +1,6 @@
 
 from os import listdir, mkdir
-from os.path import isfile, join
+from os.path import isfile, join, dirname, realpath
 from pysat.solvers import Glucose3
 from pysat.formula import CNF
 from pysat.solvers import Lingeling
@@ -9,9 +9,10 @@ from pysat.solvers import Lingeling
 import re
 import itertools
 import shutil
+import sys
 
-PATH_SAT = "../InstanciasTriviales/"
-#PATH_SAT = "../InstanciasSAT/"
+#PATH_SAT = "../InstanciasTriviales/"
+PATH_SAT = "../InstanciasSAT/"
 PATH_XSAT = "../X-SAT/"
 
 #------------------------------------------------#
@@ -52,6 +53,7 @@ def create_clauses_k_greater_x(clause, list_vars, to_sat):
     result = list()
 
     # Se crean la combinatoria de variables positivas y negativas
+    # Ejemplo [1, -1, 2, -2, 3, -3]
     variables = create_vars_k_greater_x(list_vars)
 
     for index in range(iterations):
@@ -277,7 +279,9 @@ def read_and_reduct_sat(to_xsat):
     shutil.rmtree(PATH_XSAT, ignore_errors=True)
     # Create folder XSAT
     mkdir(PATH_XSAT)
-    
+
+    print("> Realizando la reduccion")
+
     files = [f for f in listdir(PATH_SAT) if isfile(join(PATH_SAT, f))]
 
     # Read all instances SAT
@@ -286,6 +290,13 @@ def read_and_reduct_sat(to_xsat):
         xsat = reductor_SAT(instances, to_xsat)
         filename = "{}{}".format(PATH_XSAT, file)
         write_csv_file(filename, xsat, to_xsat)
-    
 
-read_and_reduct_sat(4)
+
+    print("> Terminado!")
+
+def main():
+    if __name__== "__main__" :
+        to_xsat = int(sys.argv[1])
+        read_and_reduct_sat(to_xsat)
+
+main()
