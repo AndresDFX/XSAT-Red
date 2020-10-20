@@ -52,7 +52,7 @@ def create_clauses_k_greater_x(clause, list_vars, to_sat):
     result = list()
 
     # Se crean las variables positivas y negativas
-    # Ejemplo [x1, -x1, x2, -x2]
+    # Ejemplo [8, -8, 9, -9]
     variables = create_vars_k_greater_x(list_vars)
 
     for index in range(iterations):
@@ -77,7 +77,7 @@ def create_clauses_k_greater_x(clause, list_vars, to_sat):
             result.append(aux)
 
     # Ejemplo
-    # [1, 2, 3, x1] [-x1, 3, 4, x2] [-x2, 4, 5, 6]
+    # [1, 2, 3, 8] [-8, 3, 4, 9] [-9, 4, 5, 6]
     return result
 
 
@@ -90,10 +90,10 @@ def create_clauses_k_less_x(clause, list_vars):
 
     for value in created_literals_k_less_x(list_vars):
         result.append([*clause, *value])
-    print(result)
+
     # Ejemplo, tenemos una clausula con tres literales 1, 2, 3
     # las nuevas clausulas seria
-    # [[1, 2, 3, x1, x2], [1, 2, 3, x1, -x2], [1, 2, 3, -x1, x2], [1, 2, 3, -x1, -x2]]
+    # [[1, 2, 3, 8, 9], [1, 2, 3, 8, -9], [1, 2, 3, -8, 9], [1, 2, 3, -8, -9]]
     return result
 
 
@@ -128,7 +128,7 @@ def created_literals_k_less_x(list_vars):
             bol[i][j] = list_vars[j] * negative_and_positive_vars(bol[i][j])
 
     # Ejemplo si tenemos dos variables x1 y x2
-    # [[x1, x2], [x1, -x2], [-x1, x2], [-x1, -x2]]
+    # [[8, 9], [8, -9], [-8, 9], [-8, -9]]
     return bol
 
 
