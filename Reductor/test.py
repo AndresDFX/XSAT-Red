@@ -81,7 +81,7 @@ def test_check_all_instances(all_sat, all_xsat):
         instances_xsat = reductor.read_file_dimacs("{}{}".format(all_xsat, file_xsat))
         print("Solver SAT:", reductor.solver_glucose(instances_sat[1]), "- Solver X-SAT:", reductor.solver_glucose(instances_xsat[1]))
 
-# Test Brayan
+# TEST BRYAN
 @count_elapsed_time
 def test_sat():
     filename = "../InstanciasSAT/uf20-01.cnf"
@@ -97,7 +97,7 @@ def test_xsat():
 
 
 def main():
-    # Test Brayan
+    # TEST BRYAN
     test_sat()
     test_xsat()
 

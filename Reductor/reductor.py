@@ -2,8 +2,8 @@
 from os import listdir, mkdir
 from os.path import isfile, join, dirname, realpath
 from pysat.solvers import Glucose3
-from pysat.formula import CNF
-from pysat.solvers import Lingeling
+#from pysat.formula import CNF
+#from pysat.solvers import Lingeling
 
 import re
 import itertools
