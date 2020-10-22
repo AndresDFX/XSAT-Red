@@ -1,6 +1,8 @@
 import reductor
 import shutil
 import numpy as np
+import matplotlib
+import matplotlib.pyplot as plt
 
 from time import time
 from os import listdir, mkdir
@@ -107,7 +109,7 @@ def test_check_all_instances(all_sat, all_xsat):
 def test_sat():
     # intancias negativas empiezan desde uuf50-01.cnf
     print("AQUÍ COMIENZA SAT:")
-    arraySAT = np.empty(10)
+    arraySAT = []
     for i in range(0, 10):
         tiempo_inicial = time()
         filename = "../InstanciasSAT/uf20-01" + str(i) + ".cnf"
@@ -115,9 +117,9 @@ def test_sat():
         sat = reductor.read_file_dimacs(filename)
         print("Solver SAT: ", reductor.solver_glucose(sat[1]))
         tiempo_final = time()
-        tiempo_ejecucion = tiempo_final - tiempo_inicial
+        tiempo_ejecucion = "{:.10f}".format(tiempo_final - tiempo_inicial)
         print(tiempo_ejecucion)
-        np.append(arraySAT, i)
+        arraySAT.append(tiempo_ejecucion)
     print("\n")
     print(arraySAT)
     print("\n")
@@ -126,20 +128,22 @@ def test_sat():
 def test_xsat():
     # intancias negativas empiezan desde uuf50-01.cnf
     print("AQUÍ COMIENZA XSAT:")
-    arrayXSAT = np.empty(10)
-    for i in range(0, 10):
+    arrayXSAT = []
+    for j in range(0, 10):
         tiempo_inicial = time()
-        filename = "../X-SAT/uf20-01" + str(i) + ".cnf"
+        filename = "../X-SAT/uf20-01" + str(j) + ".cnf"
         print(filename)
         sat = reductor.read_file_dimacs(filename)
         print("Solver SAT: ", reductor.solver_glucose(sat[1]))
         tiempo_final = time()
-        tiempo_ejecucion = tiempo_final - tiempo_inicial
+        tiempo_ejecucion = "{:.10f}".format(tiempo_final - tiempo_inicial)
         print(tiempo_ejecucion)
-        np.append(arrayXSAT, i)
+        arrayXSAT.append(tiempo_ejecucion)
     print(arrayXSAT)
     print("\n")
 
+plt.scatter(arraySAT, arrayXSAT)
+plt.show()
 
 """
 # TEST BRYAN
