@@ -1,3 +1,7 @@
+import re
+import itertools
+import shutil
+import sys
 
 from os import listdir, mkdir
 from os.path import isfile, join, dirname, realpath
@@ -5,13 +9,9 @@ from pysat.solvers import Glucose3
 from pysat.formula import CNF
 from pysat.solvers import Lingeling
 
-import re
-import itertools
-import shutil
-import sys
-
 #PATH_SAT = "../InstanciasTriviales/"
-PATH_SAT = "../InstanciasSAT/"
+PATH_SAT = "../InstanciasSAT-Test/" # Instancias de prueba satisfactibles (7) e insatisfactibles (3)
+#PATH_SAT = "../InstanciasSAT/"
 PATH_XSAT = "../X-SAT/"
 
 #------------------------------------------------#
@@ -290,7 +290,7 @@ def read_and_reduct_sat(to_xsat):
     mkdir(PATH_XSAT)
 
 
-    print("> Making the reductions")
+    print("> Making the reductions, please wait...")
 
 
     files = [f for f in listdir(PATH_SAT) if isfile(join(PATH_SAT, f))]
@@ -302,9 +302,8 @@ def read_and_reduct_sat(to_xsat):
         filename = "{}{}".format(PATH_XSAT, file)
         write_csv_file(filename, xsat, to_xsat)
 
-
 # Main function
 if __name__ == "__main__":
     read_and_reduct_sat(int(sys.argv[1]))
-    print("> All reductions were made")
+    print("> All reductions have been made!")
 
