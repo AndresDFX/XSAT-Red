@@ -1,4 +1,4 @@
-# ===== LIBRERIAS ===== 
+# ===== LIBRERÍAS ===== 
 import reductor
 import shutil
 import numpy as np
@@ -7,9 +7,10 @@ from time import time
 from os import listdir, mkdir
 from os.path import isfile, join, dirname, realpath
 
-# ===== PATH: Cambiar si se van a utilizar las instancias triviales o las demás ===== 
+# ===== PATH: Cambiar si se van a utilizar las instancias triviales o las demás =====
+PATH_SAT = "../InstanciasSAT-Test/" # Instancias de prueba satisfactibles (7) e insatisfactibles (3)
 #PATH_SATH = "../InstanciasTriviales/"
-PATH_SATH = "../InstanciasSAT/"
+#PATH_SATH = "../InstanciasSAT/"
 
 # ===== FUNCIONES =====
 def test_check_multiple_xsat(file, number):
@@ -70,7 +71,7 @@ def test_sat():
 
 # X-SAT
 def test_xsat():
-    print("XSAT INSTANCES:")
+    print("X-SAT INSTANCES:")
     arrayXSAT = [] # Se crea un array vacío que contendra los tiempos de las instancias X-SAT.
     for j in range(0, 10):
         init_time = time() # Se empieza tomar el tiempo por cada instancia X-SAT.
