@@ -1,11 +1,13 @@
+import reductor
+import shutil
+import numpy as np
+
+from time import time
 from os import listdir, mkdir
 from os.path import isfile, join, dirname, realpath
 
-import reductor
-import shutil
-
-PATH_SATH = "../InstanciasTriviales/"
-#PATH_SATH = "../InstanciasSAT/"
+#PATH_SATH = "../InstanciasTriviales/"
+PATH_SATH = "../InstanciasSAT/"
 
 
 def test_check_multiple_xsat(file, number):
@@ -35,7 +37,26 @@ def test_show_especific_xsat(file, to_xsat):
     reductor.write_csv_file(filename, xsat, to_xsat)
     print("Ok! ver archivo")
 
-from time import time
+def count_elapsed_time(f):
+    """
+    ¡BORRAR DESPUÉS!
+    Decorator.
+    Execute the function and calculate the elapsed time.
+    Print the result to the standard output.
+    """
+    """
+    def wrapper():
+        # Start counting.
+        start_time = time()
+        # Take the original function's return value.
+        ret = f()
+        # Calculate the elapsed time.
+        elapsed_time = time() - start_time
+        print("Elapsed time: %0.10f seconds." % elapsed_time)
+        return ret
+    
+    return wrapper
+    """
 
 def count_elapsed_time(f):
     """
@@ -50,7 +71,8 @@ def count_elapsed_time(f):
         ret = f()
         # Calculate the elapsed time.
         elapsed_time = time() - start_time
-        print("Elapsed time: %0.10f seconds." % elapsed_time)
+        total_time = "%0.10f" % elapsed_time
+        print(total_time)
         return ret
     
     return wrapper
@@ -81,19 +103,60 @@ def test_check_all_instances(all_sat, all_xsat):
         instances_xsat = reductor.read_file_dimacs("{}{}".format(all_xsat, file_xsat))
         print("Solver SAT:", reductor.solver_glucose(instances_sat[1]), "- Solver X-SAT:", reductor.solver_glucose(instances_xsat[1]))
 
+# FUNCIÓN DE PRUEBA SAT
+def test_sat():
+    # intancias negativas empiezan desde uuf50-01.cnf
+    print("AQUÍ COMIENZA SAT:")
+    arraySAT = np.empty(10)
+    for i in range(0, 10):
+        tiempo_inicial = time()
+        filename = "../InstanciasSAT/uf20-01" + str(i) + ".cnf"
+        print(filename)
+        sat = reductor.read_file_dimacs(filename)
+        print("Solver SAT: ", reductor.solver_glucose(sat[1]))
+        tiempo_final = time()
+        tiempo_ejecucion = tiempo_final - tiempo_inicial
+        print(tiempo_ejecucion)
+        np.append(arraySAT, i)
+    print("\n")
+    print(arraySAT)
+    print("\n")
+
+# FUNCIÓN DE PRUEBA X-SAT
+def test_xsat():
+    # intancias negativas empiezan desde uuf50-01.cnf
+    print("AQUÍ COMIENZA XSAT:")
+    arrayXSAT = np.empty(10)
+    for i in range(0, 10):
+        tiempo_inicial = time()
+        filename = "../X-SAT/uf20-01" + str(i) + ".cnf"
+        print(filename)
+        sat = reductor.read_file_dimacs(filename)
+        print("Solver SAT: ", reductor.solver_glucose(sat[1]))
+        tiempo_final = time()
+        tiempo_ejecucion = tiempo_final - tiempo_inicial
+        print(tiempo_ejecucion)
+        np.append(arrayXSAT, i)
+    print(arrayXSAT)
+    print("\n")
+
+
+"""
 # TEST BRYAN
 @count_elapsed_time
 def test_sat():
     filename = "../InstanciasSAT/uf20-01.cnf"
-    # intancias negativas empiezan desde uuf50-01.cnf
-    sat = reductor.read_file_dimacs(filename)
-    print("Solver SAT: ", reductor.solver_glucose(sat[1]))
-
-@count_elapsed_time
-def test_xsat():
-    filename = "../X-SAT/uf20-01.cnf"
     sat = reductor.read_file_dimacs(filename)
     print("Solver X-SAT: ", reductor.solver_glucose(sat[1]))
+"""
+
+"""
+@count_elapsed_time
+def test_xsat():
+    filename = "../X-SAT/uf20-010.cnf"
+    sat = reductor.read_file_dimacs(filename)
+    print("Solver X-SAT: ", reductor.solver_glucose(sat[1]))
+"""
 
 
 def main():
