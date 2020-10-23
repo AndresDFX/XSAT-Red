@@ -55,16 +55,18 @@ def test_check_all_instances(all_sat, all_xsat):
 def test_sat():
     print("SAT INSTANCES:")
     arraySAT = [] # Se crea un array vacío que contendra los tiempos de las instancias SAT.
-    for i in range(0, 10):
+
+    for i in range(0, 20):
         init_time = time() # Se empieza tomar el tiempo por cada instancia SAT.
-        filename = "../graph_test/InstanciasSAT-Test/ins20-01" + str(i) + ".cnf"
+        filename = "../graph_test/InstanciasSAT-Test/ins20-0" + str(i) + ".cnf"
         print(filename)
         sat = reductor.read_file_dimacs(filename)
         print("Solver SAT: ", reductor.solver_glucose(sat[1]))
         final_time = time() # Se finaliza la toma del tiempo por cada instancia SAT.
         exec_time = "{:.10f}".format(final_time - init_time) # Se toma el tiempo de ejecución de SAT con un total de 10 decimales.
         print(exec_time) # Se imprime el tiempo de ejecución por cada instancia SAT
-        arraySAT.append(exec_time) # Se insertar los tiempos de cada instancia SAT en un array.
+        arraySAT.append(exec_time) # Se insertar los tiempos de cada instancia SAT en un array.    
+
     print("\n")    
     print(arraySAT) # Se imprime el array con los tiempos para cada instancia SAT
     print("\n")
@@ -73,9 +75,10 @@ def test_sat():
 def test_xsat():
     print("X-SAT INSTANCES:")
     arrayXSAT = [] # Se crea un array vacío que contendra los tiempos de las instancias X-SAT.
-    for j in range(0, 10):
+    
+    for j in range(0, 20):
         init_time = time() # Se empieza tomar el tiempo por cada instancia X-SAT.
-        filename = "../graph_test/InstanciasSAT-Test/ins20-01" + str(j) + ".cnf"
+        filename = "../graph_test/InstanciasSAT-Test/ins20-0" + str(j) + ".cnf"
         print(filename)
         sat = reductor.read_file_dimacs(filename)
         print("Solver SAT: ", reductor.solver_glucose(sat[1]))
@@ -83,6 +86,7 @@ def test_xsat():
         exec_time = "{:.10f}".format(final_time - init_time) # Se toma el tiempo de ejecución de X-SAT con un total de 10 decimales.
         print(exec_time) # Se imprime el tiempo de ejecución por cada instancia X-SAT
         arrayXSAT.append(exec_time) # Se insertar los tiempos de cada instancia X-SAT en un array.
+
     print("\n")    
     print(arrayXSAT) # Se imprime el array con los tiempos para cada instancia X-SAT
     print("\n")
