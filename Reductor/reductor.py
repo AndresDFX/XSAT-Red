@@ -10,7 +10,7 @@ from pysat.formula import CNF
 from pysat.solvers import Lingeling
 
 #PATH_SAT = "../InstanciasTriviales/"
-PATH_SAT = "../InstanciasSAT-Test/" # Instancias de prueba satisfactibles (7) e insatisfactibles (3)
+PATH_SAT = "../graph_test/InstanciasSAT-Test/" # Instancias de prueba satisfactibles (7) e insatisfactibles (3)
 #PATH_SAT = "../InstanciasSAT/"
 PATH_XSAT = "../X-SAT/"
 

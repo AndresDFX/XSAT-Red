@@ -8,7 +8,7 @@ from os import listdir, mkdir
 from os.path import isfile, join, dirname, realpath
 
 # ===== PATH: Cambiar si se van a utilizar las instancias triviales o las demás =====
-PATH_SAT = "../InstanciasSAT-Test/" # Instancias de prueba satisfactibles (7) e insatisfactibles (3)
+PATH_SAT = "../graph_test/InstanciasSAT-Test/" # Instancias de prueba satisfactibles (7) e insatisfactibles (3)
 #PATH_SATH = "../InstanciasTriviales/"
 #PATH_SATH = "../InstanciasSAT/"
 
@@ -57,7 +57,7 @@ def test_sat():
     arraySAT = [] # Se crea un array vacío que contendra los tiempos de las instancias SAT.
     for i in range(0, 10):
         init_time = time() # Se empieza tomar el tiempo por cada instancia SAT.
-        filename = "../InstanciasSAT-Test/ins20-01" + str(i) + ".cnf"
+        filename = "../graph_test/InstanciasSAT-Test/ins20-01" + str(i) + ".cnf"
         print(filename)
         sat = reductor.read_file_dimacs(filename)
         print("Solver SAT: ", reductor.solver_glucose(sat[1]))
@@ -75,7 +75,7 @@ def test_xsat():
     arrayXSAT = [] # Se crea un array vacío que contendra los tiempos de las instancias X-SAT.
     for j in range(0, 10):
         init_time = time() # Se empieza tomar el tiempo por cada instancia X-SAT.
-        filename = "../InstanciasSAT-Test/ins20-01" + str(j) + ".cnf"
+        filename = "../graph_test/InstanciasSAT-Test/ins20-01" + str(j) + ".cnf"
         print(filename)
         sat = reductor.read_file_dimacs(filename)
         print("Solver SAT: ", reductor.solver_glucose(sat[1]))
