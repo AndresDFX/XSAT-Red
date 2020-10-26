@@ -7,23 +7,37 @@ Original file is located at
     https://colab.research.google.com/drive/1-qXOgi8Vd7H878XCIpLvdXyxp41Op9kS
 """
 
+import numpy as np
+import matplotlib.pyplot as plt
+
+arraySAT = [0.0025432110, 0.0021276474, 0.0033736229, 0.0024075508, 0.0020596981, 0.0022985935, 0.0020232201, 0.0020737648, 0.0024330616, 0.0020730495]
+arrayXSAT = [0.0062870979, 0.0211820602, 0.0086214542, 0.0125470161, 0.0060038567, 0.0065686703, 0.0062174797, 0.0102102757, 0.0137469769, 0.0073781013]
+
+plt.title("Gráfico comparativo SAT vs X-SAT")
+plt.xlabel("SAT")
+plt.ylabel("X-SAT")
+plt.scatter(arraySAT, arrayXSAT)
+plt.show()
+
 """
-12-SAT INSTANCES
-In this file, the times of the SAT and X-SAT/13-SAT instances for 10 clauses
-(with 7 satisfactory and 3 unsatisfactory clauses) are mapped through a CSV file.
+14-SAT INSTANCES
+In this file, the times of the SAT and X-SAT/14-SAT instances for 20 clauses
+(with 14 satisfiable and 6 unsatisfiable clauses) are mapped through a CSV file.
 
 Authors: @bryansbr, @AndresDFX, @dejuata
-Course: Complexity and Optimization course
+Course: Complexity and Optimization
 University: Universidad del Valle, Cali-Colombia
 Year: 2020
 """
+
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-#url = "https://raw.githubusercontent.com/AndresDFX/XSAT-Red/graph/graph_test/SAT-times_instances.csv"
-url = "https://raw.githubusercontent.com/AndresDFX/XSAT-Red/graph/graph_test/SAT-times_instances_1.csv"
+url = "https://raw.githubusercontent.com/AndresDFX/XSAT-Red/graph/graph_test/SAT-times_instances-final.csv"
 data = pd.read_csv(url)
+#data.head()
+
 colors = {"satisfiable": "Blue", "unsatisfiable": "Red"}
 instances_color = data.clause_result.map(colors)
 
@@ -36,33 +50,9 @@ for clause_result in set(data.clause_result):
         c = colors[clause_result],
         label = clause_result)
 
-plt.title("Gráfico comparativo SAT vs X-SAT")
+plt.title("Comparative graph SAT vs X-SAT")
 plt.xlabel("SAT")
 plt.ylabel("X-SAT")    
 plt.legend()
-plt.show()
-
-# IGNORE
-#data.head()
-#set(data.clause_result)
-#fig, ax = plt.subplots()
-#ax.scatter(data.sat_time, data.xsat_time, color=instances_color)
-#plt.show()
-
-# =======================================================================================
-"""
-OTHER FORM:
-
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-
-arraySAT = [0.0025432110, 0.0021276474, 0.0033736229, 0.0024075508, 0.0020596981, 0.0022985935, 0.0020232201, 0.0020737648, 0.0024330616, 0.0020730495]
-arrayXSAT = [0.0062870979, 0.0211820602, 0.0086214542, 0.0125470161, 0.0060038567, 0.0065686703, 0.0062174797, 0.0102102757, 0.0137469769, 0.0073781013]
-
-plt.title("Gráfico comparativo SAT vs X-SAT")
-plt.xlabel("SAT")
-plt.ylabel("X-SAT")
-plt.scatter(arraySAT, arrayXSAT)
-plt.show()
-"""
+plt.savefig("Comparative graph SAT vs X-SAT (20 instances)", bbox_inches='tight') # Save the graph
+plt.show() # Show the graph

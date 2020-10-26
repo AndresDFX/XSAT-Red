@@ -15,7 +15,7 @@ PATH_SAT = "../graph_test/InstanciasSAT-Test/" # Instancias de prueba satisfacti
 PATH_XSAT = "../X-SAT/"
 
 #------------------------------------------------#
-# AUX FUNCTIONS FOR TRANSFORM SAT TO X SAT
+# AUX FUNCTIONS FOR TRANSFORM SAT TO X-SAT
 #------------------------------------------------#
 
 def create_clauses_SAT(clause, list_vars, to_sat):
